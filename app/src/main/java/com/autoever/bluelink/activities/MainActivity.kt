@@ -13,11 +13,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        // 바로 SignUpActivity로 이동
-        val intent = Intent(this, SignUpActivity::class.java)
-        startActivity(intent)
 
-        // MainActivity 종료
-        finish()
     }
 }
