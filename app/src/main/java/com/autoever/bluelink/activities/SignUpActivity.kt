@@ -135,7 +135,7 @@ class SignUpActivity : AppCompatActivity() {
                 Log.d("SignUpActivity", "User data successfully written!")
 
                 // 메인 화면으로 이동
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
             }
