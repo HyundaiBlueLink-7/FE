@@ -1,19 +1,170 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".activities.MainActivity">
 
+    <!-- 차량 모델 이름 -->
     <TextView
+        android:id="@+id/tvCarModel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20dp"
+        android:text="SONATA"
+        android:textSize="34sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 차량 이미지 -->
+
+
+    <androidx.constraintlayout.helper.widget.Layer
+        android:id="@+id/layer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="ivCarImage"
+        tools:layout_editor_absoluteX="111dp"
+        tools:layout_editor_absoluteY="98dp" />
+
+    <ImageView
+        android:id="@+id/ivCarImage"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/car_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCarModel" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/carDetail"
+        android:layout_width="0dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="100dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCarModel"
+        app:layout_constraintWidth_percent="0.9" />
+
+
+
+    <!-- 차량 세부정보 (carDetail) -->
+
+    <!-- 연결 상태 -->
+    <TextView
+        android:id="@+id/tvConnected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connected"
+        android:textColor="@color/pink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivCarImage" />
+
+    <!-- 차량 거리 -->
+    <TextView
+        android:id="@+id/tvDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="88km"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvConnected" />
+
+    <!-- 차량 제어 카드 -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="150dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDistance"
+        app:layout_constraintWidth_percent="0.9">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- 상단 제어 타이틀 -->
+            <TextView
+                android:id="@+id/tvControlTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="차량 제어"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- 제어 버튼 -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="130dp">
+
+                <!-- 이미지 버튼 그룹 -->
+                <LinearLayout
+                    android:id="@+id/bottom_controls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <!-- 문 잠금 -->
+                    <ImageView
+                        android:id="@+id/btn_lock"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/circular_background"
+                        android:padding="15dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/lock" />
+
+                    <!-- 시동 -->
+                    <ImageView
+                        android:id="@+id/carOn"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/circular_background"
+                        android:padding="30dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/power" />
+
+                    <!-- 문 열기 -->
+                    <ImageView
+                        android:id="@+id/btn_unlock"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/circular_background"
+                        android:padding="15dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/unlock" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="ivCarImage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
