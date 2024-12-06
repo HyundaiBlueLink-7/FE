@@ -1,5 +1,6 @@
 package com.autoever.bluelink.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -20,6 +21,8 @@ class ControlActivity : AppCompatActivity() {
     private lateinit var stopButton: ImageView
     private lateinit var lightButton: ImageView
     private lateinit var sirenButton: ImageView
+    private lateinit var closeButton: ImageView
+
 
     // 버튼 상태 관리 (true: 활성화, false: 비활성화)
     private val buttonStates = mutableMapOf<ImageView, Boolean>()
@@ -81,6 +84,7 @@ class ControlActivity : AppCompatActivity() {
         stopButton = findViewById(R.id.poweroff)
         lightButton = findViewById(R.id.light)
         sirenButton = findViewById(R.id.siren)
+        closeButton = findViewById(R.id.close)
 
         // 버튼 상태 초기화
         buttonStates[lockButton] = false
@@ -121,6 +125,10 @@ class ControlActivity : AppCompatActivity() {
                 disableOtherButton(lockButton)
             }
         }
+
+        closeButton.setOnClickListener( {
+            toMain()
+        })
     }
 
     // 현재 온도를 TextView에 표시하는 함수
@@ -140,6 +148,12 @@ class ControlActivity : AppCompatActivity() {
             button.setBackgroundResource(R.drawable.btn_shadow) // 활성화 배경으로 변경
             buttonStates[button] = true
         }
+    }
+
+    private fun toMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
     // 다른 버튼 비활성화 (시동 켜기/끄기 전용)
