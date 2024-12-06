@@ -69,6 +69,27 @@
             android:textColorHint="#D2CCCC"
             android:inputType="text" />
 
+        <!-- 차량 별칭 입력 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="차량 별칭을 입력해주세요"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/nicknameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/input_background"
+            android:hint="별칭 입력 (예: 가족 차량)"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#D2CCCC"
+            android:inputType="text" />
+
         <!-- 연료 종류 선택 -->
         <TextView
             android:layout_width="wrap_content"

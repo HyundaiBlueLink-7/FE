@@ -17,6 +17,7 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var fuelTypeSpinner: Spinner
     private lateinit var carNumberEditText: EditText
     private lateinit var yearEditText: EditText
+    private lateinit var nicknameEditText: EditText
     private lateinit var registerCarButton: TextView
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
@@ -35,6 +36,7 @@ class RegistrationActivity : AppCompatActivity() {
         fuelTypeSpinner = findViewById(R.id.fuelTypeSpinner)
         carNumberEditText = findViewById(R.id.carNumberEditText)
         yearEditText = findViewById(R.id.yearEditText)
+        nicknameEditText = findViewById(R.id.nicknameEditText) // 차량 별칭 입력 추가
         registerCarButton = findViewById(R.id.registerCarButton)
 
         // 차량 모델 목록
@@ -74,6 +76,7 @@ class RegistrationActivity : AppCompatActivity() {
             val selectedFuel = fuelTypeSpinner.selectedItem.toString()
             val carNumber = carNumberEditText.text.toString().trim()
             val manufactureYear = yearEditText.text.toString().trim()
+            val nickname = nicknameEditText.text.toString().trim() // 별칭 입력 값 가져오기
 
             // 현재 로그인된 사용자 ID 가져오기
             val currentUser = auth.currentUser
@@ -87,7 +90,7 @@ class RegistrationActivity : AppCompatActivity() {
             // 연료 타입을 FuelType으로 변환
             val fuelType = FuelType.fromDisplayName(selectedFuel)
 
-            if (selectedCar == "선택하세요" || fuelType == null || carNumber.isEmpty() || manufactureYear.isEmpty()) {
+            if (selectedCar == "선택하세요" || fuelType == null || carNumber.isEmpty() || manufactureYear.isEmpty() || nickname.isEmpty()) {
                 Toast.makeText(this, "모든 필드를 입력해주세요.", Toast.LENGTH_SHORT).show()
             } else {
                 val car = Car(
@@ -96,7 +99,8 @@ class RegistrationActivity : AppCompatActivity() {
                     model = selectedCar,
                     number = carNumber,
                     year = manufactureYear.toInt(),
-                    fuelType = fuelType
+                    fuelType = fuelType,
+                    nickname = nickname // 별칭 추가
                 )
                 saveCarToFirestore(car)
             }
