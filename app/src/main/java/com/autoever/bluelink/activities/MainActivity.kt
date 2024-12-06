@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var powerIndicatorImageView: ImageView
     private lateinit var carNameTextView: TextView
     private lateinit var carNicknameTextView: TextView
+    private lateinit var carImageView: ImageView
+    private lateinit var fuelTextView: TextView // 추가: 연료 정보
     private lateinit var logoutImageView: ImageView
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
@@ -34,6 +36,8 @@ class MainActivity : AppCompatActivity() {
         powerIndicatorImageView = findViewById(R.id.imageView2)
         carNameTextView = findViewById(R.id.textViewCarName)
         carNicknameTextView = findViewById(R.id.textViewCarNickname)
+        carImageView = findViewById(R.id.imageView6)
+        fuelTextView = findViewById(R.id.textView3) // 추가: 연료 정보 초기화
         logoutImageView = findViewById(R.id.imageView5)
 
         // Firestore에서 차량 정보를 가져와 UI 업데이트
@@ -67,8 +71,11 @@ class MainActivity : AppCompatActivity() {
                     val carModel = car.getString("model") ?: "모델 없음"
                     val carNickname = car.getString("nickname") ?: "별칭 없음"
                     val isPowerOn = car.getBoolean("isPowerOn") ?: false
+                    val currentFuel = car.getLong("currentFuel") ?: 0L // 추가: 연료 정보
 
                     updateCarUI(carModel, carNickname)
+                    updateCarImage(carModel)
+                    updateFuelUI(currentFuel)
                     updatePowerStateUI(isPowerOn)
                 } else {
                     Toast.makeText(this, "등록된 차량이 없습니다.", Toast.LENGTH_SHORT).show()
@@ -82,6 +89,22 @@ class MainActivity : AppCompatActivity() {
     private fun updateCarUI(model: String, nickname: String) {
         carNameTextView.text = model
         carNicknameTextView.text = nickname
+    }
+
+    private fun updateCarImage(model: String) {
+        val imageRes = when (model.lowercase()) {
+            "sonata" -> R.drawable.sonata
+            "avante" -> R.drawable.avante
+            "santa fe" -> R.drawable.santa_fe
+            "tucson" -> R.drawable.tucson
+            "palisade" -> R.drawable.palisade
+            else -> android.R.color.darker_gray // 회색 배경
+        }
+        carImageView.setImageResource(imageRes)
+    }
+
+    private fun updateFuelUI(currentFuel: Long) {
+        fuelTextView.text = "${currentFuel}km" // 연료 정보 업데이트
     }
 
     private fun updatePowerStateUI(isPowerOn: Boolean) {
@@ -136,7 +159,7 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
 
         // 로그인 화면으로 이동
-        val intent = Intent(this, IntroActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // 이전 액티비티 스택 제거
         startActivity(intent)
         finish()

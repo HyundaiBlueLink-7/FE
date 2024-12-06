@@ -9,6 +9,7 @@ import com.autoever.bluelink.models.Car
 import com.autoever.bluelink.models.FuelType
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.random.Random
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -100,7 +101,8 @@ class RegistrationActivity : AppCompatActivity() {
                     number = carNumber,
                     year = manufactureYear.toInt(),
                     fuelType = fuelType,
-                    nickname = nickname // 별칭 추가
+                    nickname = nickname, // 별칭 추가
+                    currentFuel = Random.nextInt(100, 501) // 100에서 500 사이의 랜덤값
                 )
                 saveCarToFirestore(car)
             }

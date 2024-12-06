@@ -10,7 +10,7 @@ data class Car(
     var nickname: String, // 차량 별칭 (기본값: "My Car")
     var isEngineOn: Boolean = false, // 시동 여부 (기본값 false)
     var isDoorOpen: Boolean = false, // 문열림 여부 (기본값 false)
-    var currentFuel: Int = 232       // 현재 주유량 (기본값 232km)
+    var currentFuel: Int       // 현재 주유량 (기본값 232km)
 )
 
 enum class FuelType(val displayName: String) {
