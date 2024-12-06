@@ -21,6 +21,9 @@ class ControlActivity : AppCompatActivity() {
     private lateinit var lightButton: ImageView
     private lateinit var sirenButton: ImageView
 
+    // 버튼 상태 관리 (true: 활성화, false: 비활성화)
+    private val buttonStates = mutableMapOf<ImageView, Boolean>()
+
     private var currentTemp = 24.0f // 초기 온도 설정
     private val minTemp = 16.0f // 최소 온도
     private val maxTemp = 30.0f // 최대 온도
@@ -79,22 +82,44 @@ class ControlActivity : AppCompatActivity() {
         lightButton = findViewById(R.id.light)
         sirenButton = findViewById(R.id.siren)
 
-        // 버튼 클릭 이벤트 설정
-        lockButton.setOnClickListener { handleButtonClick(lockButton) }
-        unlockButton.setOnClickListener { handleButtonClick(unlockButton) }
-        lightButton.setOnClickListener { handleButtonClick(lightButton) }
-        sirenButton.setOnClickListener { handleButtonClick(sirenButton) }
+        // 버튼 상태 초기화
+        buttonStates[lockButton] = false
+        buttonStates[unlockButton] = false
+        buttonStates[startButton] = false
+        buttonStates[stopButton] = false
+        buttonStates[lightButton] = false
+        buttonStates[sirenButton] = false
 
-        // "시동 켜기" 버튼
+        // 버튼 클릭 이벤트 설정
+        lightButton.setOnClickListener { toggleButton(lightButton) }
+        sirenButton.setOnClickListener { toggleButton(sirenButton) }
+
         startButton.setOnClickListener {
-            handleButtonClick(startButton)
-            disableOtherButton(stopButton)
+            toggleButton(startButton)
+            if (buttonStates[startButton] == true) {
+                disableOtherButton(stopButton)
+            }
         }
 
-        // "시동 끄기" 버튼
         stopButton.setOnClickListener {
-            handleButtonClick(stopButton)
-            disableOtherButton(startButton)
+            toggleButton(stopButton)
+            if (buttonStates[stopButton] == true) {
+                disableOtherButton(startButton)
+            }
+        }
+
+        lockButton.setOnClickListener {
+            toggleButton(lockButton)
+            if (buttonStates[lockButton] == true) {
+                disableOtherButton(unlockButton)
+            }
+        }
+
+        unlockButton.setOnClickListener {
+            toggleButton(unlockButton)
+            if (buttonStates[unlockButton] == true) {
+                disableOtherButton(lockButton)
+            }
         }
     }
 
@@ -103,20 +128,24 @@ class ControlActivity : AppCompatActivity() {
         tvCurrentTemp.text = String.format("%.1f℃", currentTemp)
     }
 
-    // 버튼 클릭 시 배경 변경 처리
-    private fun handleButtonClick(button: ImageView) {
-        button.setBackgroundResource(R.drawable.btn_shadow) // 배경 변경
+    // 버튼 상태를 토글하는 함수
+    private fun toggleButton(button: ImageView) {
+        val isActive = buttonStates[button] ?: false
+        if (isActive) {
+            // 버튼이 활성화된 상태 -> 비활성화로 변경
+            button.setBackgroundResource(R.drawable.circular_background) // 기본 배경으로 변경
+            buttonStates[button] = false
+        } else {
+            // 버튼이 비활성화된 상태 -> 활성화로 변경
+            button.setBackgroundResource(R.drawable.btn_shadow) // 활성화 배경으로 변경
+            buttonStates[button] = true
+        }
     }
 
-    // 클릭된 버튼을 제외한 나머지 버튼 초기화
-    private fun resetOtherButtons(activeButton: ImageView) {
-        val buttons = listOf(lockButton, unlockButton, startButton, stopButton, lightButton, sirenButton)
-        buttons.filter { it != activeButton }
-            .forEach { it.setBackgroundResource(0) } // 배경 초기화
-    }
-
-    // "시동 켜기"와 "시동 끄기" 동시 활성화 방지
+    // 다른 버튼 비활성화 (시동 켜기/끄기 전용)
     private fun disableOtherButton(button: ImageView) {
-        button.setBackgroundResource(0) // 배경 초기화
+        button.setBackgroundResource(R.drawable.circular_background) // 기본 배경으로 설정
+        buttonStates[button] = false
     }
+
 }
