@@ -3,6 +3,7 @@ package com.autoever.bluelink.activities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,11 +20,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var carNameTextView: TextView
     private lateinit var carNicknameTextView: TextView
     private lateinit var carImageView: ImageView
-    private lateinit var fuelTextView: TextView // 추가: 연료 정보
+    private lateinit var fuelTextView: TextView
     private lateinit var logoutImageView: ImageView
+    private lateinit var tempMinusButton: ImageView
+    private lateinit var tempPlusButton: ImageView
+    private lateinit var tempDisplay: TextView
+    private lateinit var tempSeekBar: SeekBar
+    private lateinit var btnLock: ImageView
+    private lateinit var btnUnlock: ImageView
+
+    private var currentTemperature = 24.0
+    private var isDoorLocked = true // 초기 문 상태
+
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-    private var carId: String = "" // 차량 ID 저장
+    private var carId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,21 +48,42 @@ class MainActivity : AppCompatActivity() {
         carNameTextView = findViewById(R.id.textViewCarName)
         carNicknameTextView = findViewById(R.id.textViewCarNickname)
         carImageView = findViewById(R.id.imageView6)
-        fuelTextView = findViewById(R.id.textView3) // 추가: 연료 정보 초기화
+        fuelTextView = findViewById(R.id.textView3)
         logoutImageView = findViewById(R.id.imageView5)
+        tempMinusButton = findViewById(R.id.tempMinus)
+        tempPlusButton = findViewById(R.id.tempPlus)
+        tempDisplay = findViewById(R.id.tempDisplay)
+        tempSeekBar = findViewById(R.id.tempSeekBar)
+        btnLock = findViewById(R.id.btn_lock)
+        btnUnlock = findViewById(R.id.btn_unlock)
 
         // Firestore에서 차량 정보를 가져와 UI 업데이트
         fetchCarData()
 
-        // 시동 버튼 클릭 이벤트
-        carOnImageView.setOnClickListener {
-            togglePowerState()
-        }
+        // 초기 문 상태 UI 반영
+        updateDoorLockUI()
 
-        // 로그아웃 버튼 클릭 이벤트
-        logoutImageView.setOnClickListener {
-            logout()
-        }
+        // 버튼 클릭 이벤트
+        carOnImageView.setOnClickListener { togglePowerState() }
+        logoutImageView.setOnClickListener { logout() }
+        tempMinusButton.setOnClickListener { adjustTemperature(-0.5) }
+        tempPlusButton.setOnClickListener { adjustTemperature(0.5) }
+        btnLock.setOnClickListener { lockDoors() }
+        btnUnlock.setOnClickListener { unlockDoors() }
+
+        tempSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                currentTemperature = 16.0 + (progress / 2.0)
+                updateTempDisplay()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        // 초기 온도 표시
+        tempSeekBar.progress = ((currentTemperature - 16) * 2).toInt()
+        updateTempDisplay()
     }
 
     private fun fetchCarData() {
@@ -71,12 +103,12 @@ class MainActivity : AppCompatActivity() {
                     val carModel = car.getString("model") ?: "모델 없음"
                     val carNickname = car.getString("nickname") ?: "별칭 없음"
                     val isPowerOn = car.getBoolean("isPowerOn") ?: false
-                    val currentFuel = car.getLong("currentFuel") ?: 0L // 추가: 연료 정보
+                    isDoorLocked = car.getBoolean("isDoorLocked") ?: true // 문 상태 가져오기
 
                     updateCarUI(carModel, carNickname)
                     updateCarImage(carModel)
-                    updateFuelUI(currentFuel)
                     updatePowerStateUI(isPowerOn)
+                    updateDoorLockUI() // 문 상태 반영
                 } else {
                     Toast.makeText(this, "등록된 차량이 없습니다.", Toast.LENGTH_SHORT).show()
                 }
@@ -98,19 +130,15 @@ class MainActivity : AppCompatActivity() {
             "santa fe" -> R.drawable.santa_fe
             "tucson" -> R.drawable.tucson
             "palisade" -> R.drawable.palisade
-            else -> android.R.color.darker_gray // 회색 배경
+            else -> android.R.color.darker_gray
         }
         carImageView.setImageResource(imageRes)
-    }
-
-    private fun updateFuelUI(currentFuel: Long) {
-        fuelTextView.text = "${currentFuel}km" // 연료 정보 업데이트
     }
 
     private fun updatePowerStateUI(isPowerOn: Boolean) {
         if (isPowerOn) {
             powerTextView.text = "켜짐"
-            powerTextView.setTextColor(getColor(R.color.aeef_blue)) // #00AEEF
+            powerTextView.setTextColor(getColor(R.color.aeef_blue))
             carOnImageView.setImageResource(R.drawable.power_on)
             carOnImageView.setBackgroundResource(R.drawable.circular_background_blue)
             powerIndicatorImageView.setImageResource(R.drawable.power_on)
@@ -121,6 +149,66 @@ class MainActivity : AppCompatActivity() {
             carOnImageView.setBackgroundResource(R.drawable.circular_background)
             powerIndicatorImageView.setImageResource(R.drawable.power_off)
         }
+    }
+
+    private fun lockDoors() {
+        if (!isDoorLocked) {
+            isDoorLocked = true
+            updateDoorLockStateInFirestore()
+            updateDoorLockUI()
+            Toast.makeText(this, "문이 잠겼습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun unlockDoors() {
+        if (isDoorLocked) {
+            isDoorLocked = false
+            updateDoorLockStateInFirestore()
+            updateDoorLockUI()
+            Toast.makeText(this, "문이 열렸습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateDoorLockUI() {
+        if (isDoorLocked) {
+            btnLock.setBackgroundResource(R.drawable.circular_background_blue)
+            btnUnlock.setBackgroundResource(R.drawable.circular_background)
+        } else {
+            btnLock.setBackgroundResource(R.drawable.circular_background)
+            btnUnlock.setBackgroundResource(R.drawable.circular_background_blue)
+        }
+    }
+
+    private fun updateDoorLockStateInFirestore() {
+        if (carId.isEmpty()) return
+
+        firestore.collection("cars").document(carId)
+            .update("isDoorLocked", isDoorLocked)
+            .addOnSuccessListener {
+                // 성공 시 로깅 또는 추가 작업 가능
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "문 상태를 업데이트하지 못했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun adjustTemperature(delta: Double) {
+        val newTemperature = currentTemperature + delta
+        if (newTemperature in 16.0..30.0) {
+            currentTemperature = newTemperature
+            tempSeekBar.progress = ((currentTemperature - 16) * 2).toInt()
+            updateTempDisplay()
+        } else {
+            Toast.makeText(
+                this,
+                if (newTemperature < 16.0) "최소 온도는 16.0°C입니다." else "최대 온도는 30.0°C입니다.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun updateTempDisplay() {
+        tempDisplay.text = String.format("%.1f°C", currentTemperature)
     }
 
     private fun togglePowerState() {
@@ -155,12 +243,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        auth.signOut() // Firebase 로그아웃
+        auth.signOut()
         Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
-
-        // 로그인 화면으로 이동
         val intent = Intent(this, IntroActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // 이전 액티비티 스택 제거
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         finish()
     }
