@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
 
         // 로그인 화면으로 이동
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, IntroActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // 이전 액티비티 스택 제거
         startActivity(intent)
         finish()
