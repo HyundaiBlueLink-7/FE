@@ -3,6 +3,7 @@ package com.autoever.bluelink.activities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +22,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var carImageView: ImageView
     private lateinit var fuelTextView: TextView // 추가: 연료 정보
     private lateinit var logoutImageView: ImageView
+    private lateinit var tempMinusButton: ImageView
+    private lateinit var tempPlusButton: ImageView
+    private lateinit var tempDisplay: TextView
+    private lateinit var tempSeekBar: SeekBar
+
+    private var currentTemperature = 24.0 // 초기 온도
+
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
     private var carId: String = "" // 차량 ID 저장
@@ -40,6 +48,11 @@ class MainActivity : AppCompatActivity() {
         fuelTextView = findViewById(R.id.textView3) // 추가: 연료 정보 초기화
         logoutImageView = findViewById(R.id.imageView5)
 
+        tempMinusButton = findViewById(R.id.tempMinus)
+        tempPlusButton = findViewById(R.id.tempPlus)
+        tempDisplay = findViewById(R.id.tempDisplay)
+        tempSeekBar = findViewById(R.id.tempSeekBar)
+
         // Firestore에서 차량 정보를 가져와 UI 업데이트
         fetchCarData()
 
@@ -52,6 +65,29 @@ class MainActivity : AppCompatActivity() {
         logoutImageView.setOnClickListener {
             logout()
         }
+
+        // 온도 조절 버튼 이벤트
+        tempMinusButton.setOnClickListener {
+            adjustTemperature(-0.5)
+        }
+        tempPlusButton.setOnClickListener {
+            adjustTemperature(0.5)
+        }
+
+        // SeekBar 이벤트 설정
+        tempSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                currentTemperature = 16.0 + (progress / 2.0)
+                updateTempDisplay()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        // 초기 온도 표시
+        tempSeekBar.progress = ((currentTemperature - 16) * 2).toInt()
+        updateTempDisplay()
     }
 
     private fun fetchCarData() {
@@ -123,6 +159,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun adjustTemperature(delta: Double) {
+        val newTemperature = currentTemperature + delta
+        if (newTemperature in 16.0..30.0) {
+            currentTemperature = newTemperature
+            tempSeekBar.progress = ((currentTemperature - 16) * 2).toInt()
+            updateTempDisplay()
+        } else {
+            Toast.makeText(
+                this,
+                if (newTemperature < 16.0) "최소 온도는 16.0°C입니다." else "최대 온도는 30.0°C입니다.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun updateTempDisplay() {
+        tempDisplay.text = String.format("%.1f°C", currentTemperature)
+    }
+
     private fun togglePowerState() {
         if (carId.isEmpty()) {
             Toast.makeText(this, "차량 정보가 없습니다.", Toast.LENGTH_SHORT).show()
@@ -158,9 +213,8 @@ class MainActivity : AppCompatActivity() {
         auth.signOut() // Firebase 로그아웃
         Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
 
-        // 로그인 화면으로 이동
         val intent = Intent(this, IntroActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // 이전 액티비티 스택 제거
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         finish()
     }
