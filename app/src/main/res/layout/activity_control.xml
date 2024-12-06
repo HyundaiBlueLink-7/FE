@@ -101,7 +101,7 @@
                             android:background="@drawable/circular_background"
                             android:padding="20dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/power" />
+                            android:src="@drawable/power_off" />
 
                         <TextView
                             android:id="@+id/tv_car_on"
