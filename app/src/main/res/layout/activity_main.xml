@@ -115,7 +115,7 @@
 
                 <!-- 이미지 버튼 그룹 -->
                 <LinearLayout
-                    android:id="@+id/bottom_controls"
+                    android:id="@+id/bottom_controls2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
@@ -127,7 +127,7 @@
 
                     <!-- 문 잠금 -->
                     <ImageView
-                        android:id="@+id/btn_lock"
+                        android:id="@+id/powerOff"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:background="@drawable/circular_background"
@@ -137,7 +137,7 @@
 
                     <!-- 시동 -->
                     <ImageView
-                        android:id="@+id/carOn"
+                        android:id="@+id/light"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:layout_marginStart="16dp"
@@ -149,7 +149,7 @@
 
                     <!-- 문 열기 -->
                     <ImageView
-                        android:id="@+id/btn_unlock"
+                        android:id="@+id/siren"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:background="@drawable/circular_background"
