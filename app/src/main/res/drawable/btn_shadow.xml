@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100dp"
+                android:startColor="#33CCFF"
+                android:centerColor="#8EC6FF"
+                android:endColor="#66A3FF"
+                android:centerX="0.5"
+                android:centerY="0.5" />
+            <corners android:radius="1000dp" />
+        </shape>
+
+    </item>
+
+    <!-- 내부 배경 (흰색 원) -->
+    <item
+        android:left="6dp"
+        android:right="6dp"
+        android:top="6dp"
+        android:bottom="6dp">
+        <shape>
+            <solid android:color="#FFFFFF" />
+            <corners android:radius="1000dp" />
+        </shape>
+    </item>
+</layer-list>

@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tempSeekBar: SeekBar
     private lateinit var btnLock: ImageView
     private lateinit var btnUnlock: ImageView
+    private lateinit var btnControl: TextView
+
 
     private var currentTemperature = 24.0
     private var isDoorLocked = true // 초기 문 상태
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         tempSeekBar = findViewById(R.id.tempSeekBar)
         btnLock = findViewById(R.id.btn_lock)
         btnUnlock = findViewById(R.id.btn_unlock)
+        btnControl = findViewById(R.id.controlButton)
 
         // Firestore에서 차량 정보를 가져와 UI 업데이트
         fetchCarData()
@@ -70,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         tempPlusButton.setOnClickListener { adjustTemperature(0.5) }
         btnLock.setOnClickListener { lockDoors() }
         btnUnlock.setOnClickListener { unlockDoors() }
+        btnControl.setOnClickListener { toControl() }
 
         tempSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -121,6 +125,12 @@ class MainActivity : AppCompatActivity() {
     private fun updateCarUI(model: String, nickname: String) {
         carNameTextView.text = model
         carNicknameTextView.text = nickname
+    }
+
+    private fun toControl() {
+        val intent = Intent(this, ControlActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
     private fun updateCarImage(model: String) {
