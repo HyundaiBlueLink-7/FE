@@ -1,5 +1,6 @@
 package com.autoever.bluelink.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -122,6 +123,11 @@ class RegistrationActivity : AppCompatActivity() {
         carDocument.set(car)
             .addOnSuccessListener {
                 Toast.makeText(this, "차량 등록 성공: ${car.model}", Toast.LENGTH_SHORT).show()
+
+                // MainActivity로 이동
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "차량 등록 실패: ${e.message}", Toast.LENGTH_SHORT).show()
