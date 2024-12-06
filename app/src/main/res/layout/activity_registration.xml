@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    tools:context=".activities.RegistrationActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- 제목 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="블루링크 차량을\n등록해주세요."
+            android:textColor="#000000"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <!-- 차량 이미지 -->
+        <ImageView
+            android:id="@+id/carImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="fitCenter"
+            android:src="@android:color/darker_gray" />
+
+        <!-- 차종 선택 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="차종을 선택해주세요"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/carModelSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/spinner_background"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 차량 번호 입력 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="차량 번호를 입력해주세요"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/carNumberEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/input_background"
+            android:hint="차량 번호 입력"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#D2CCCC"
+            android:inputType="text" />
+
+        <!-- 차량 별칭 입력 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="차량 별칭을 입력해주세요"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/nicknameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/input_background"
+            android:hint="별칭 입력 (예: 가족 차량)"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#D2CCCC"
+            android:inputType="text" />
+
+        <!-- 연료 종류 선택 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="연료 종류를 선택해주세요"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/fuelTypeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/spinner_background"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 연식 입력 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="연식 입력"
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/yearEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/input_background"
+            android:hint="연식 입력"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#D2CCCC"
+            android:inputType="number" />
+
+        <!-- 등록 버튼 -->
+        <TextView
+            android:id="@+id/registerCarButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_border"
+            android:padding="12dp"
+            android:text="차량 등록"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:textSize="16sp" />
+    </LinearLayout>
+</ScrollView>
